@@ -1,0 +1,178 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1000px;
+                 height: 700px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "Arjuna", "label": "Arjuna", "shape": "dot", "size": 23}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bhima", "label": "Bhima", "shape": "dot", "size": 21}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Krishna", "label": "Krishna", "shape": "dot", "size": 32}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Yudhishthira", "label": "Yudhishthira", "shape": "dot", "size": 38}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Pandu", "label": "Pandu", "shape": "dot", "size": 37}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kunti", "label": "Kunti", "shape": "dot", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Sahadeva", "label": "Sahadeva", "shape": "dot", "size": 23}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Pandavas", "label": "Pandavas", "shape": "dot", "size": 25}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Draupadi", "label": "Draupadi", "shape": "dot", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Duryodhana", "label": "Duryodhana", "shape": "dot", "size": 22}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Nakula", "label": "Nakula", "shape": "dot", "size": 14}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Yama", "label": "Yama", "shape": "dot", "size": 19}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Rama", "label": "Rama", "shape": "dot", "size": 9}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Agni", "label": "Agni", "shape": "dot", "size": 9}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Indra", "label": "Indra", "shape": "dot", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Nala", "label": "Nala", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Satyaki", "label": "Satyaki", "shape": "dot", "size": 8}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Karna", "label": "Karna", "shape": "dot", "size": 15}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Madri", "label": "Madri", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Vidura", "label": "Vidura", "shape": "dot", "size": 20}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Yadu", "label": "Yadu", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kuru", "label": "Kuru", "shape": "dot", "size": 27}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Yadavas", "label": "Yadavas", "shape": "dot", "size": 12}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Drupada", "label": "Drupada", "shape": "dot", "size": 16}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bhishma", "label": "Bhishma", "shape": "dot", "size": 17}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Dhritarashtra", "label": "Dhritarashtra", "shape": "dot", "size": 28}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Brahma", "label": "Brahma", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Janamejaya", "label": "Janamejaya", "shape": "dot", "size": 8}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Narada", "label": "Narada", "shape": "dot", "size": 11}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Virata", "label": "Virata", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kauravas", "label": "Kauravas", "shape": "dot", "size": 13}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Dhrishtadyumna", "label": "Dhrishtadyumna", "shape": "dot", "size": 9}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Sanjaya", "label": "Sanjaya", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jayadratha", "label": "Jayadratha", "shape": "dot", "size": 8}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Pururavas", "label": "Pururavas", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Gandhari", "label": "Gandhari", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Uttara", "label": "Uttara", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Uluka", "label": "Uluka", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Vyasa", "label": "Vyasa", "shape": "dot", "size": 9}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ganga", "label": "Ganga", "shape": "dot", "size": 7}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Drona", "label": "Drona", "shape": "dot", "size": 17}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bhagadatta", "label": "Bhagadatta", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kichaka", "label": "Kichaka", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Subhadra", "label": "Subhadra", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Varaha", "label": "Varaha", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Vali", "label": "Vali", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ekalavya", "label": "Ekalavya", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Vishnu", "label": "Vishnu", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jara", "label": "Jara", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Vikarna", "label": "Vikarna", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kripa", "label": "Kripa", "shape": "dot", "size": 12}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Takshaka", "label": "Takshaka", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Maitreya", "label": "Maitreya", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Vichitravirya", "label": "Vichitravirya", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Nahusha", "label": "Nahusha", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kanka", "label": "Kanka", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kali", "label": "Kali", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bharadwaja", "label": "Bharadwaja", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Satyavati", "label": "Satyavati", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Durvasa", "label": "Durvasa", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Savitri", "label": "Savitri", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Vasus", "label": "Vasus", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Uparichara", "label": "Uparichara", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jaimini", "label": "Jaimini", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Lakshmana", "label": "Lakshmana", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Yugas", "label": "Yugas", "shape": "dot", "size": 2}]);
+                  edges = new vis.DataSet([{"from": "Arjuna", "to": "Bhima", "value": 170, "width": 1}, {"from": "Arjuna", "to": "Krishna", "value": 130, "width": 1}, {"from": "Arjuna", "to": "Yudhishthira", "value": 99, "width": 1}, {"from": "Arjuna", "to": "Pandu", "value": 43, "width": 1}, {"from": "Arjuna", "to": "Kunti", "value": 32, "width": 1}, {"from": "Arjuna", "to": "Sahadeva", "value": 31, "width": 1}, {"from": "Arjuna", "to": "Pandavas", "value": 18, "width": 1}, {"from": "Arjuna", "to": "Draupadi", "value": 16, "width": 1}, {"from": "Arjuna", "to": "Duryodhana", "value": 13, "width": 1}, {"from": "Arjuna", "to": "Nakula", "value": 12, "width": 1}, {"from": "Arjuna", "to": "Yama", "value": 12, "width": 1}, {"from": "Arjuna", "to": "Rama", "value": 11, "width": 1}, {"from": "Arjuna", "to": "Agni", "value": 10, "width": 1}, {"from": "Arjuna", "to": "Indra", "value": 8, "width": 1}, {"from": "Arjuna", "to": "Nala", "value": 6, "width": 1}, {"from": "Arjuna", "to": "Satyaki", "value": 6, "width": 1}, {"from": "Arjuna", "to": "Karna", "value": 6, "width": 1}, {"from": "Arjuna", "to": "Madri", "value": 5, "width": 1}, {"from": "Arjuna", "to": "Vidura", "value": 5, "width": 1}, {"from": "Arjuna", "to": "Yadu", "value": 5, "width": 1}, {"from": "Arjuna", "to": "Kuru", "value": 5, "width": 1}, {"from": "Arjuna", "to": "Yadavas", "value": 3, "width": 1}, {"from": "Arjuna", "to": "Drupada", "value": 3, "width": 1}, {"from": "Bhima", "to": "Krishna", "value": 110, "width": 1}, {"from": "Bhima", "to": "Duryodhana", "value": 54, "width": 1}, {"from": "Bhima", "to": "Pandu", "value": 53, "width": 1}, {"from": "Bhima", "to": "Yudhishthira", "value": 44, "width": 1}, {"from": "Bhima", "to": "Bhishma", "value": 33, "width": 1}, {"from": "Bhima", "to": "Kunti", "value": 30, "width": 1}, {"from": "Bhima", "to": "Dhritarashtra", "value": 26, "width": 1}, {"from": "Bhima", "to": "Pandavas", "value": 17, "width": 1}, {"from": "Bhima", "to": "Kuru", "value": 14, "width": 1}, {"from": "Bhima", "to": "Sahadeva", "value": 13, "width": 1}, {"from": "Bhima", "to": "Yadavas", "value": 12, "width": 1}, {"from": "Bhima", "to": "Yama", "value": 11, "width": 1}, {"from": "Bhima", "to": "Vidura", "value": 11, "width": 1}, {"from": "Bhima", "to": "Drupada", "value": 6, "width": 1}, {"from": "Bhima", "to": "Brahma", "value": 6, "width": 1}, {"from": "Bhima", "to": "Janamejaya", "value": 6, "width": 1}, {"from": "Bhima", "to": "Draupadi", "value": 6, "width": 1}, {"from": "Bhima", "to": "Karna", "value": 5, "width": 1}, {"from": "Bhima", "to": "Satyaki", "value": 5, "width": 1}, {"from": "Bhima", "to": "Madri", "value": 4, "width": 1}, {"from": "Pandu", "to": "Yudhishthira", "value": 163, "width": 1}, {"from": "Pandu", "to": "Krishna", "value": 95, "width": 1}, {"from": "Pandu", "to": "Pandavas", "value": 72, "width": 1}, {"from": "Pandu", "to": "Dhritarashtra", "value": 71, "width": 1}, {"from": "Pandu", "to": "Duryodhana", "value": 51, "width": 1}, {"from": "Pandu", "to": "Kuru", "value": 47, "width": 1}, {"from": "Pandu", "to": "Kunti", "value": 45, "width": 1}, {"from": "Pandu", "to": "Nakula", "value": 41, "width": 1}, {"from": "Pandu", "to": "Bhishma", "value": 36, "width": 1}, {"from": "Pandu", "to": "Indra", "value": 34, "width": 1}, {"from": "Pandu", "to": "Draupadi", "value": 28, "width": 1}, {"from": "Pandu", "to": "Narada", "value": 25, "width": 1}, {"from": "Pandu", "to": "Sahadeva", "value": 22, "width": 1}, {"from": "Pandu", "to": "Karna", "value": 22, "width": 1}, {"from": "Pandu", "to": "Vidura", "value": 20, "width": 1}, {"from": "Pandu", "to": "Agni", "value": 16, "width": 1}, {"from": "Pandu", "to": "Madri", "value": 13, "width": 1}, {"from": "Pandu", "to": "Virata", "value": 11, "width": 1}, {"from": "Pandu", "to": "Rama", "value": 10, "width": 1}, {"from": "Pandu", "to": "Yama", "value": 9, "width": 1}, {"from": "Pandu", "to": "Kauravas", "value": 6, "width": 1}, {"from": "Pandu", "to": "Satyaki", "value": 6, "width": 1}, {"from": "Pandu", "to": "Yadu", "value": 6, "width": 1}, {"from": "Pandu", "to": "Dhrishtadyumna", "value": 6, "width": 1}, {"from": "Pandu", "to": "Sanjaya", "value": 6, "width": 1}, {"from": "Pandu", "to": "Janamejaya", "value": 6, "width": 1}, {"from": "Pandu", "to": "Jayadratha", "value": 6, "width": 1}, {"from": "Pandu", "to": "Pururavas", "value": 5, "width": 1}, {"from": "Pandu", "to": "Gandhari", "value": 5, "width": 1}, {"from": "Pandu", "to": "Uttara", "value": 4, "width": 1}, {"from": "Pandu", "to": "Drupada", "value": 4, "width": 1}, {"from": "Pandu", "to": "Uluka", "value": 3, "width": 1}, {"from": "Pandu", "to": "Vyasa", "value": 3, "width": 1}, {"from": "Pandu", "to": "Ganga", "value": 3, "width": 1}, {"from": "Pandu", "to": "Drona", "value": 3, "width": 1}, {"from": "Yudhishthira", "to": "Krishna", "value": 125, "width": 1}, {"from": "Yudhishthira", "to": "Pandavas", "value": 110, "width": 1}, {"from": "Yudhishthira", "to": "Kunti", "value": 109, "width": 1}, {"from": "Yudhishthira", "to": "Duryodhana", "value": 103, "width": 1}, {"from": "Yudhishthira", "to": "Dhritarashtra", "value": 74, "width": 1}, {"from": "Yudhishthira", "to": "Draupadi", "value": 60, "width": 1}, {"from": "Yudhishthira", "to": "Narada", "value": 54, "width": 1}, {"from": "Yudhishthira", "to": "Kuru", "value": 50, "width": 1}, {"from": "Yudhishthira", "to": "Vidura", "value": 41, "width": 1}, {"from": "Yudhishthira", "to": "Sahadeva", "value": 38, "width": 1}, {"from": "Yudhishthira", "to": "Bhishma", "value": 35, "width": 1}, {"from": "Yudhishthira", "to": "Nakula", "value": 29, "width": 1}, {"from": "Yudhishthira", "to": "Kauravas", "value": 18, "width": 1}, {"from": "Yudhishthira", "to": "Satyaki", "value": 14, "width": 1}, {"from": "Yudhishthira", "to": "Vyasa", "value": 13, "width": 1}, {"from": "Yudhishthira", "to": "Bhagadatta", "value": 13, "width": 1}, {"from": "Yudhishthira", "to": "Madri", "value": 10, "width": 1}, {"from": "Yudhishthira", "to": "Kichaka", "value": 10, "width": 1}, {"from": "Yudhishthira", "to": "Indra", "value": 10, "width": 1}, {"from": "Yudhishthira", "to": "Subhadra", "value": 8, "width": 1}, {"from": "Yudhishthira", "to": "Gandhari", "value": 6, "width": 1}, {"from": "Yudhishthira", "to": "Yama", "value": 6, "width": 1}, {"from": "Yudhishthira", "to": "Janamejaya", "value": 6, "width": 1}, {"from": "Yudhishthira", "to": "Varaha", "value": 6, "width": 1}, {"from": "Yudhishthira", "to": "Drona", "value": 5, "width": 1}, {"from": "Yudhishthira", "to": "Sanjaya", "value": 5, "width": 1}, {"from": "Yudhishthira", "to": "Vali", "value": 5, "width": 1}, {"from": "Yudhishthira", "to": "Yadavas", "value": 5, "width": 1}, {"from": "Yudhishthira", "to": "Drupada", "value": 5, "width": 1}, {"from": "Yudhishthira", "to": "Agni", "value": 5, "width": 1}, {"from": "Yudhishthira", "to": "Rama", "value": 4, "width": 1}, {"from": "Yudhishthira", "to": "Brahma", "value": 4, "width": 1}, {"from": "Yudhishthira", "to": "Ekalavya", "value": 3, "width": 1}, {"from": "Yudhishthira", "to": "Yadu", "value": 3, "width": 1}, {"from": "Yudhishthira", "to": "Dhrishtadyumna", "value": 2, "width": 1}, {"from": "Krishna", "to": "Pandavas", "value": 101, "width": 1}, {"from": "Krishna", "to": "Bhishma", "value": 52, "width": 1}, {"from": "Krishna", "to": "Kuru", "value": 50, "width": 1}, {"from": "Krishna", "to": "Sahadeva", "value": 38, "width": 1}, {"from": "Krishna", "to": "Draupadi", "value": 34, "width": 1}, {"from": "Krishna", "to": "Yadu", "value": 32, "width": 1}, {"from": "Krishna", "to": "Karna", "value": 30, "width": 1}, {"from": "Krishna", "to": "Indra", "value": 30, "width": 1}, {"from": "Krishna", "to": "Dhritarashtra", "value": 28, "width": 1}, {"from": "Krishna", "to": "Kunti", "value": 27, "width": 1}, {"from": "Krishna", "to": "Drupada", "value": 24, "width": 1}, {"from": "Krishna", "to": "Yadavas", "value": 22, "width": 1}, {"from": "Krishna", "to": "Duryodhana", "value": 18, "width": 1}, {"from": "Krishna", "to": "Vishnu", "value": 17, "width": 1}, {"from": "Krishna", "to": "Nakula", "value": 13, "width": 1}, {"from": "Krishna", "to": "Vidura", "value": 12, "width": 1}, {"from": "Krishna", "to": "Dhrishtadyumna", "value": 11, "width": 1}, {"from": "Krishna", "to": "Yama", "value": 10, "width": 1}, {"from": "Krishna", "to": "Kauravas", "value": 8, "width": 1}, {"from": "Krishna", "to": "Jara", "value": 7, "width": 1}, {"from": "Krishna", "to": "Vikarna", "value": 7, "width": 1}, {"from": "Krishna", "to": "Gandhari", "value": 6, "width": 1}, {"from": "Krishna", "to": "Narada", "value": 6, "width": 1}, {"from": "Krishna", "to": "Kripa", "value": 6, "width": 1}, {"from": "Krishna", "to": "Satyaki", "value": 6, "width": 1}, {"from": "Krishna", "to": "Takshaka", "value": 6, "width": 1}, {"from": "Krishna", "to": "Drona", "value": 5, "width": 1}, {"from": "Krishna", "to": "Rama", "value": 3, "width": 1}, {"from": "Pandavas", "to": "Dhritarashtra", "value": 97, "width": 1}, {"from": "Pandavas", "to": "Duryodhana", "value": 53, "width": 1}, {"from": "Pandavas", "to": "Draupadi", "value": 50, "width": 1}, {"from": "Pandavas", "to": "Vidura", "value": 26, "width": 1}, {"from": "Pandavas", "to": "Kauravas", "value": 25, "width": 1}, {"from": "Pandavas", "to": "Kuru", "value": 21, "width": 1}, {"from": "Pandavas", "to": "Indra", "value": 21, "width": 1}, {"from": "Pandavas", "to": "Vikarna", "value": 16, "width": 1}, {"from": "Pandavas", "to": "Kunti", "value": 15, "width": 1}, {"from": "Pandavas", "to": "Karna", "value": 14, "width": 1}, {"from": "Pandavas", "to": "Narada", "value": 6, "width": 1}, {"from": "Pandavas", "to": "Maitreya", "value": 6, "width": 1}, {"from": "Pandavas", "to": "Bhishma", "value": 5, "width": 1}, {"from": "Pandavas", "to": "Yadavas", "value": 5, "width": 1}, {"from": "Pandavas", "to": "Yama", "value": 4, "width": 1}, {"from": "Pandavas", "to": "Vichitravirya", "value": 3, "width": 1}, {"from": "Pandavas", "to": "Dhrishtadyumna", "value": 3, "width": 1}, {"from": "Pandavas", "to": "Gandhari", "value": 3, "width": 1}, {"from": "Pandavas", "to": "Ganga", "value": 2, "width": 1}, {"from": "Pandavas", "to": "Drona", "value": 2, "width": 1}, {"from": "Kunti", "to": "Duryodhana", "value": 26, "width": 1}, {"from": "Kunti", "to": "Dhritarashtra", "value": 24, "width": 1}, {"from": "Kunti", "to": "Kuru", "value": 23, "width": 1}, {"from": "Kunti", "to": "Draupadi", "value": 11, "width": 1}, {"from": "Kunti", "to": "Bhagadatta", "value": 9, "width": 1}, {"from": "Kunti", "to": "Indra", "value": 8, "width": 1}, {"from": "Kunti", "to": "Vidura", "value": 8, "width": 1}, {"from": "Kunti", "to": "Yama", "value": 7, "width": 1}, {"from": "Kunti", "to": "Vyasa", "value": 6, "width": 1}, {"from": "Kunti", "to": "Nahusha", "value": 6, "width": 1}, {"from": "Kunti", "to": "Kanka", "value": 6, "width": 1}, {"from": "Kunti", "to": "Uluka", "value": 4, "width": 1}, {"from": "Kunti", "to": "Subhadra", "value": 4, "width": 1}, {"from": "Kunti", "to": "Bhishma", "value": 3, "width": 1}, {"from": "Dhritarashtra", "to": "Duryodhana", "value": 106, "width": 1}, {"from": "Dhritarashtra", "to": "Vidura", "value": 99, "width": 1}, {"from": "Dhritarashtra", "to": "Draupadi", "value": 47, "width": 1}, {"from": "Dhritarashtra", "to": "Bhishma", "value": 38, "width": 1}, {"from": "Dhritarashtra", "to": "Drona", "value": 25, "width": 1}, {"from": "Dhritarashtra", "to": "Yama", "value": 16, "width": 1}, {"from": "Dhritarashtra", "to": "Kauravas", "value": 15, "width": 1}, {"from": "Dhritarashtra", "to": "Jayadratha", "value": 11, "width": 1}, {"from": "Dhritarashtra", "to": "Sanjaya", "value": 11, "width": 1}, {"from": "Dhritarashtra", "to": "Sahadeva", "value": 10, "width": 1}, {"from": "Dhritarashtra", "to": "Indra", "value": 8, "width": 1}, {"from": "Dhritarashtra", "to": "Nala", "value": 6, "width": 1}, {"from": "Dhritarashtra", "to": "Vikarna", "value": 6, "width": 1}, {"from": "Dhritarashtra", "to": "Janamejaya", "value": 6, "width": 1}, {"from": "Dhritarashtra", "to": "Vichitravirya", "value": 6, "width": 1}, {"from": "Dhritarashtra", "to": "Gandhari", "value": 6, "width": 1}, {"from": "Dhritarashtra", "to": "Drupada", "value": 5, "width": 1}, {"from": "Dhritarashtra", "to": "Kali", "value": 5, "width": 1}, {"from": "Dhritarashtra", "to": "Kripa", "value": 4, "width": 1}, {"from": "Dhritarashtra", "to": "Karna", "value": 4, "width": 1}, {"from": "Dhritarashtra", "to": "Kuru", "value": 3, "width": 1}, {"from": "Dhritarashtra", "to": "Nakula", "value": 2, "width": 1}, {"from": "Duryodhana", "to": "Karna", "value": 40, "width": 1}, {"from": "Duryodhana", "to": "Vidura", "value": 38, "width": 1}, {"from": "Duryodhana", "to": "Kauravas", "value": 29, "width": 1}, {"from": "Duryodhana", "to": "Draupadi", "value": 24, "width": 1}, {"from": "Duryodhana", "to": "Kuru", "value": 15, "width": 1}, {"from": "Duryodhana", "to": "Drona", "value": 14, "width": 1}, {"from": "Duryodhana", "to": "Gandhari", "value": 11, "width": 1}, {"from": "Duryodhana", "to": "Vyasa", "value": 10, "width": 1}, {"from": "Duryodhana", "to": "Sahadeva", "value": 10, "width": 1}, {"from": "Duryodhana", "to": "Drupada", "value": 6, "width": 1}, {"from": "Duryodhana", "to": "Bhishma", "value": 5, "width": 1}, {"from": "Duryodhana", "to": "Jayadratha", "value": 5, "width": 1}, {"from": "Duryodhana", "to": "Yama", "value": 4, "width": 1}, {"from": "Duryodhana", "to": "Yadavas", "value": 3, "width": 1}, {"from": "Vidura", "to": "Kripa", "value": 28, "width": 1}, {"from": "Vidura", "to": "Bhishma", "value": 27, "width": 1}, {"from": "Vidura", "to": "Drona", "value": 24, "width": 1}, {"from": "Vidura", "to": "Karna", "value": 17, "width": 1}, {"from": "Vidura", "to": "Gandhari", "value": 12, "width": 1}, {"from": "Vidura", "to": "Draupadi", "value": 11, "width": 1}, {"from": "Vidura", "to": "Kali", "value": 6, "width": 1}, {"from": "Vidura", "to": "Kauravas", "value": 6, "width": 1}, {"from": "Vidura", "to": "Bharadwaja", "value": 5, "width": 1}, {"from": "Vidura", "to": "Vyasa", "value": 4, "width": 1}, {"from": "Vidura", "to": "Kuru", "value": 1, "width": 1}, {"from": "Bhishma", "to": "Drona", "value": 84, "width": 1}, {"from": "Bhishma", "to": "Kuru", "value": 32, "width": 1}, {"from": "Bhishma", "to": "Sahadeva", "value": 11, "width": 1}, {"from": "Bhishma", "to": "Virata", "value": 6, "width": 1}, {"from": "Bhishma", "to": "Indra", "value": 6, "width": 1}, {"from": "Bhishma", "to": "Karna", "value": 6, "width": 1}, {"from": "Bhishma", "to": "Narada", "value": 5, "width": 1}, {"from": "Bhishma", "to": "Ganga", "value": 4, "width": 1}, {"from": "Drona", "to": "Kripa", "value": 59, "width": 1}, {"from": "Drona", "to": "Karna", "value": 23, "width": 1}, {"from": "Drona", "to": "Jayadratha", "value": 10, "width": 1}, {"from": "Drona", "to": "Nakula", "value": 6, "width": 1}, {"from": "Drona", "to": "Sahadeva", "value": 6, "width": 1}, {"from": "Drona", "to": "Dhrishtadyumna", "value": 6, "width": 1}, {"from": "Drona", "to": "Draupadi", "value": 5, "width": 1}, {"from": "Drona", "to": "Kuru", "value": 5, "width": 1}, {"from": "Drona", "to": "Gandhari", "value": 4, "width": 1}, {"from": "Nakula", "to": "Sahadeva", "value": 69, "width": 1}, {"from": "Nakula", "to": "Madri", "value": 11, "width": 1}, {"from": "Nakula", "to": "Draupadi", "value": 11, "width": 1}, {"from": "Nakula", "to": "Yama", "value": 6, "width": 1}, {"from": "Nakula", "to": "Jayadratha", "value": 6, "width": 1}, {"from": "Nakula", "to": "Kripa", "value": 5, "width": 1}, {"from": "Nakula", "to": "Bhagadatta", "value": 4, "width": 1}, {"from": "Nakula", "to": "Yadavas", "value": 4, "width": 1}, {"from": "Sahadeva", "to": "Agni", "value": 38, "width": 1}, {"from": "Sahadeva", "to": "Kuru", "value": 26, "width": 1}, {"from": "Sahadeva", "to": "Madri", "value": 18, "width": 1}, {"from": "Sahadeva", "to": "Draupadi", "value": 9, "width": 1}, {"from": "Sahadeva", "to": "Drupada", "value": 6, "width": 1}, {"from": "Sahadeva", "to": "Karna", "value": 6, "width": 1}, {"from": "Sahadeva", "to": "Kauravas", "value": 5, "width": 1}, {"from": "Sahadeva", "to": "Narada", "value": 5, "width": 1}, {"from": "Sahadeva", "to": "Yadavas", "value": 5, "width": 1}, {"from": "Sahadeva", "to": "Indra", "value": 5, "width": 1}, {"from": "Sahadeva", "to": "Satyavati", "value": 4, "width": 1}, {"from": "Sahadeva", "to": "Brahma", "value": 3, "width": 1}, {"from": "Sahadeva", "to": "Rama", "value": 2, "width": 1}, {"from": "Draupadi", "to": "Kauravas", "value": 16, "width": 1}, {"from": "Draupadi", "to": "Subhadra", "value": 16, "width": 1}, {"from": "Draupadi", "to": "Vishnu", "value": 5, "width": 1}, {"from": "Draupadi", "to": "Yama", "value": 5, "width": 1}, {"from": "Draupadi", "to": "Yadavas", "value": 5, "width": 1}, {"from": "Draupadi", "to": "Madri", "value": 4, "width": 1}, {"from": "Draupadi", "to": "Karna", "value": 2, "width": 1}, {"from": "Kripa", "to": "Kuru", "value": 11, "width": 1}, {"from": "Kripa", "to": "Karna", "value": 6, "width": 1}, {"from": "Kripa", "to": "Bharadwaja", "value": 6, "width": 1}, {"from": "Kripa", "to": "Jayadratha", "value": 6, "width": 1}, {"from": "Kripa", "to": "Bhagadatta", "value": 4, "width": 1}, {"from": "Kripa", "to": "Drupada", "value": 3, "width": 1}, {"from": "Kripa", "to": "Madri", "value": 2, "width": 1}, {"from": "Narada", "to": "Kuru", "value": 20, "width": 1}, {"from": "Narada", "to": "Indra", "value": 11, "width": 1}, {"from": "Narada", "to": "Yama", "value": 10, "width": 1}, {"from": "Narada", "to": "Brahma", "value": 6, "width": 1}, {"from": "Narada", "to": "Vyasa", "value": 6, "width": 1}, {"from": "Kuru", "to": "Agni", "value": 20, "width": 1}, {"from": "Kuru", "to": "Indra", "value": 19, "width": 1}, {"from": "Kuru", "to": "Kauravas", "value": 10, "width": 1}, {"from": "Kuru", "to": "Janamejaya", "value": 9, "width": 1}, {"from": "Kuru", "to": "Yama", "value": 7, "width": 1}, {"from": "Kuru", "to": "Karna", "value": 6, "width": 1}, {"from": "Kuru", "to": "Drupada", "value": 5, "width": 1}, {"from": "Kuru", "to": "Virata", "value": 5, "width": 1}, {"from": "Kuru", "to": "Gandhari", "value": 5, "width": 1}, {"from": "Kuru", "to": "Yadu", "value": 4, "width": 1}, {"from": "Kuru", "to": "Ganga", "value": 3, "width": 1}, {"from": "Kuru", "to": "Yadavas", "value": 2, "width": 1}, {"from": "Karna", "to": "Yama", "value": 5, "width": 1}, {"from": "Agni", "to": "Madri", "value": 21, "width": 1}, {"from": "Agni", "to": "Janamejaya", "value": 17, "width": 1}, {"from": "Agni", "to": "Indra", "value": 6, "width": 1}, {"from": "Agni", "to": "Brahma", "value": 3, "width": 1}, {"from": "Indra", "to": "Yama", "value": 13, "width": 1}, {"from": "Indra", "to": "Durvasa", "value": 13, "width": 1}, {"from": "Indra", "to": "Savitri", "value": 6, "width": 1}, {"from": "Indra", "to": "Rama", "value": 6, "width": 1}, {"from": "Indra", "to": "Pururavas", "value": 5, "width": 1}, {"from": "Indra", "to": "Ganga", "value": 5, "width": 1}, {"from": "Indra", "to": "Vasus", "value": 5, "width": 1}, {"from": "Indra", "to": "Madri", "value": 2, "width": 1}, {"from": "Kauravas", "to": "Dhrishtadyumna", "value": 6, "width": 1}, {"from": "Kauravas", "to": "Drupada", "value": 5, "width": 1}, {"from": "Kauravas", "to": "Vikarna", "value": 5, "width": 1}, {"from": "Drupada", "to": "Ekalavya", "value": 6, "width": 1}, {"from": "Drupada", "to": "Dhrishtadyumna", "value": 6, "width": 1}, {"from": "Drupada", "to": "Virata", "value": 6, "width": 1}, {"from": "Drupada", "to": "Vikarna", "value": 5, "width": 1}, {"from": "Drupada", "to": "Gandhari", "value": 4, "width": 1}, {"from": "Yadavas", "to": "Rama", "value": 10, "width": 1}, {"from": "Yadavas", "to": "Satyaki", "value": 4, "width": 1}, {"from": "Janamejaya", "to": "Rama", "value": 6, "width": 1}, {"from": "Janamejaya", "to": "Uparichara", "value": 6, "width": 1}, {"from": "Yama", "to": "Nahusha", "value": 5, "width": 1}, {"from": "Yama", "to": "Jayadratha", "value": 5, "width": 1}, {"from": "Yama", "to": "Uttara", "value": 5, "width": 1}, {"from": "Yama", "to": "Ganga", "value": 2, "width": 1}, {"from": "Satyaki", "to": "Dhrishtadyumna", "value": 6, "width": 1}, {"from": "Satyaki", "to": "Kanka", "value": 4, "width": 1}, {"from": "Vyasa", "to": "Jaimini", "value": 6, "width": 1}, {"from": "Vyasa", "to": "Ekalavya", "value": 5, "width": 1}, {"from": "Vyasa", "to": "Varaha", "value": 4, "width": 1}, {"from": "Bhagadatta", "to": "Virata", "value": 12, "width": 1}, {"from": "Bhagadatta", "to": "Jayadratha", "value": 6, "width": 1}, {"from": "Durvasa", "to": "Bharadwaja", "value": 6, "width": 1}, {"from": "Virata", "to": "Dhrishtadyumna", "value": 6, "width": 1}, {"from": "Lakshmana", "to": "Rama", "value": 12, "width": 1}, {"from": "Brahma", "to": "Jara", "value": 8, "width": 1}, {"from": "Nala", "to": "Nahusha", "value": 6, "width": 1}, {"from": "Nala", "to": "Uparichara", "value": 6, "width": 1}, {"from": "Savitri", "to": "Vasus", "value": 6, "width": 1}, {"from": "Savitri", "to": "Yugas", "value": 6, "width": 1}, {"from": "Jaimini", "to": "Vali", "value": 6, "width": 1}, {"from": "Vali", "to": "Maitreya", "value": 6, "width": 1}, {"from": "Yugas", "to": "Ganga", "value": 5, "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.2,
+            "damping": 0.09,
+            "nodeDistance": 100,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
